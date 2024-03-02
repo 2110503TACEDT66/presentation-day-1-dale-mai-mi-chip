@@ -1,8 +1,8 @@
-const Hospital = require('../models/Hospital');
+const MessageShop = require('../models/MessageShop');
 const vacCenter = require('../models/VacCenter');
 
 //@desc     Get vaccine centers
-//@route    GET /api/v1/hospitals/vacCenters/
+//@route    GET /api/v1/messageShops/vacCenters/
 //@access   Public
 
 exports.getVacCenters = (req,res,next) => {
@@ -34,7 +34,7 @@ exports.getMessageShops = async (req,res,next) => {
     let queryStr = JSON.stringify(reqQuery); //Make it into String 
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-    query = Hospital.find(JSON.parse(queryStr)).populate('appointments');
+    query = MessageShop.find(JSON.parse(queryStr)).populate('appointments');
 
     //Select the field
 
@@ -57,14 +57,14 @@ exports.getMessageShops = async (req,res,next) => {
     // ,10 in this case is converting into base 10 number + || 1 -> If the answer is not a valid integer then it will be 1 
     const page = parseInt(req.query.page, 10) || 1;
     //how many result in each page default is 25
-    const limit = parseInt(req.query.limit, 10) || 25;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     //number of the result ahich appear in each page
     const startIndex = (page-1)*limit;
     const endIndex = page*limit;
 
-    //Count all the hospitals
-    const total = await Hospital.countDocuments();
+    //Count all the MessageShops
+    const total = await MessageShop.countDocuments();
 
     //query.skip(startindex) -> Start at what, imit(limit) -> how many results that user want
     query = query.skip(startIndex).limit(limit);
@@ -72,7 +72,7 @@ exports.getMessageShops = async (req,res,next) => {
     //Output Data
 
     try {
-        const hospitals = await query;
+        const messageShops = await query;
 
         //Execution Pagination 
         const pagination = {};
@@ -93,9 +93,9 @@ exports.getMessageShops = async (req,res,next) => {
 
         res.status(200).json({
             success : true,
-            count : hospitals.length,
+            count :messageShops.length,
             pagination,
-            data : hospitals,
+            data :messageShops,
         });
     } catch (error) {
         res.status(400).json({success:false});
@@ -105,12 +105,12 @@ exports.getMessageShops = async (req,res,next) => {
 
 exports.getMessageShop = async (req,res,next) => {
     try {
-        const hospitals = await Hospital.findById(req.params.id);
-        if(!hospitals) {
+        const messageShops = await MessageShop.findById(req.params.id);
+        if(!messageShops) {
             res.status(400).json({success:false});
         }
         else{
-            res.status(200).json({success:true ,data : hospitals});
+            res.status(200).json({success:true ,data : messageShops});
         }
     } catch (error) {
         res.status(400).json({success:false});
@@ -118,21 +118,21 @@ exports.getMessageShop = async (req,res,next) => {
 }
 
 exports.createMessageShop  = async (req,res,next) => {
-    const hospital = await Hospital.create(req.body);
-    res.status(201).json({success:true, data:hospital});
+    const messageShop = await MessageShop.create(req.body);
+    res.status(201).json({success:true, data:messageShop});
 }
 
 exports.updateMessageShop  = async (req,res,next) => {
     try {
-        const hospital = await Hospital.findByIdAndUpdate(req.params.id, req.body, {
+        const messageShop = await MessageShop.findByIdAndUpdate(req.params.id, req.body, {
             new : true,
             runValidators: true
         })
-        if (!hospital){
-            res.status(400).json({success:false, message :' There is no hospital!'});
+        if (!messageShop){
+            res.status(400).json({success:false, message :' There is no messageShop!'});
         }
         else {
-            res.status(200).json({success:true, data : hospital});
+            res.status(200).json({success:true, data : messageShop});
         }
     } catch (error) {
         res.status(400).json({success:false,  message : error.message});
@@ -142,12 +142,12 @@ exports.updateMessageShop  = async (req,res,next) => {
 
 exports.deleteMessageShop  = async (req,res,next) => {
     try {
-        const hospital = await Hospital.findById(req.params.id);
-        if(!hospital){
+        const messageShop = await MessageShop.findById(req.params.id);
+        if(!messageShop){
             return res.status(404).json({success:false, message : `Bootcamp not found with id of ${req.params.id}`});
         }
 
-        await hospital.deleteOne();
+        await messageShop.deleteOne();
         res.status(200).json({success : true, data : {}})
     } catch (error) {
         console.log(error.stack);

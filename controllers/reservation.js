@@ -1,39 +1,40 @@
-const Appointment = require('../models/Reservation');
-const Hospital = require('../models/MessageShop')
+const Reservation = require('../models/Reservation');
+const MessageShop = require('../models/MessageShop')
 
 //@desc     Get all appoinments 
 //@route    Get /api/v1/appointents
 //@access   Public
 
-exports.getAppointments = async (req, res, next) => {
+
+exports.getReservations = async (req, res, next) => {
     let query;
 
     if(req.user.role !== 'admin'){
-        query = Appointment.find({user : req.user.id}).populate({
-            path: 'hospital',
+        query = Reservation.find({user : req.user.id}).populate({
+            path: 'messageShop',
             select : 'name province tel'
         });
     }else {
-        if(req.params.hospitalId){
-            console.log(req.params.hospitalId);
-            query = Appointment.find({hospital : req.params.hospitalId}).populate({
-                path: 'hospital',
+        if(req.params.messageShopId){
+            console.log(req.params.messageShopId);
+            query = Reservation.find({messageShop : req.params.messageShopId}).populate({
+                path: 'messageShop',
                 select : 'name province tel'
             });
         }else{
-            query = Appointment.find().populate({
-                path: 'hospital',
+            query = Reservation.find().populate({
+                path: 'messageShop',
                 select : 'name province tel'
             });
         }
         //If you are an admin you can see all
     }
     try {
-        const appointments = await query;
+        const reservations = await query;
         res.status(200).json({
             success : true, 
-            count : appointments.length,
-            data : appointments
+            count : reservations.length,
+            data : reservations
         })
     } catch (error) {
         console.log(error);
@@ -48,42 +49,42 @@ exports.getAppointments = async (req, res, next) => {
 //@route    Get /api/v1/appointents/:id
 //@access   Private
 
-exports.getAppointment = async (req, res, next) => {
+exports.getReservation = async (req, res, next) => {
     try {
-        const appointment = await Appointment.findById(req.params.id).populate({
-            path : 'hospital',
+        const reservation = await Reservation.findById(req.params.id).populate({
+            path : 'messageShop',
             select : 'name description tel'
         });
 
-        if(!appointment){
-            return res.status(404).json({success:false, message:`No appointment with the id of ${req.params.id}` });
+        if(!reservation){
+            return res.status(404).json({success:false, message:`No reservation with the id of ${req.params.id}` });
         }
         res.status(200).json({
             success : true, 
-            data : appointment
+            data : reservation
         })
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : 'Cannot find the appoinment'
+            message : 'Cannot find the reservation'
         })
     }
 }
 
 //@desc     Add one appoinments 
-//@route    Add /api/v1/appointments
+//@route    Add /api/v1/reservations
 //@access   Private
 
-exports.addAppointment = async (req, res, next) => {
+exports.addReservation = async (req, res, next) => {
     try {
         //Collect it at the request body
        
-        req.body.hospital = req.params.hospitalId;
-        const hospital = await Hospital.findById(req.params.hospitalId);
+        req.body.messageShop = req.params.messageShopId;
+        const messageShop = await MessageShop.findById(req.params.messageShopId);
 
-        if(!hospital){
-            return res.status(404).json({success:false, message:`No hospital with the id of ${req.params.hospitalId}` });
+        if(!messageShop){
+            return res.status(404).json({success:false, message:`No Message Shop with the id of ${req.params.messageShopId}` });
         }
 
         //only the person that login can update their appointment
@@ -92,24 +93,24 @@ exports.addAppointment = async (req, res, next) => {
         req.body.user = req.user.id;
 
         //Check for existed appointment
-        const existedAppointment = await Appointment.find({user : req.user.id});
+        const existedReservation = await Reservation.find({user : req.user.id});
 
-        //if not an admin cannot create more than 3 appointments
-        if(existedAppointment.length >=3 && req.user.role !== 'admin'){
+        //if not an admin cannot create more than 3 Reservations
+        if(existedReservation.length >=3 && req.user.role !== 'admin'){
             return res.status(401).json({success: false, message: `The user with ID ${req.user.id} has already made 3 appointments`})
         }
 
-        const appointment = await Appointment.create(req.body)
+        const reservation = await Reservation.create(req.body)
 
         res.status(200).json({
             success : true, 
-            data : appointment
+            data : reservation
         });
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : 'Cannot create the appointment'
+            message : 'Cannot create the reservation'
         })
     }
 }
@@ -118,22 +119,22 @@ exports.addAppointment = async (req, res, next) => {
 //@route    PUT /api/v1/appointents
 //@access   Private
 
-exports.updateAppointment = async (req, res, next) => {
+exports.updateReservation = async (req, res, next) => {
     try {
-        let appointment = await Appointment.findById(req.params.id);
-        if(!appointment){
-            return res.status(404).json({success:false, message : `No appointment with the id of ${req.params.id}`})
+        let reservation = await Reservation.findById(req.params.id);
+        if(!reservation){
+            return res.status(404).json({success:false, message : `No reservation with the id of ${req.params.id}`})
         }
-        appointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
+        reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
             new : true,
             runValidators : true //For checking Data
         });
-        res.status(200).json({success : true, data : appointment})
+        res.status(200).json({success : true, data : reservation})
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : `Cannot update the appoinment `
+            message : `Cannot update the reservation `
         })
     }
 }
@@ -144,25 +145,25 @@ exports.updateAppointment = async (req, res, next) => {
 //@route    PUT /api/v1/appointents
 //@access   Private
 
-exports.deleteAppointment = async (req, res, next) => {
+exports.deleteReservation = async (req, res, next) => {
     try {
-        const appointment = await Appointment.findById(req.params.id);
+        const reservation = await Reservation.findById(req.params.id);
 
-        if(!appointment){
-            return res.status(404).json({success : false, message : `Np appointment with the id ${req.params.id}`});
+        if(!reservation){
+            return res.status(404).json({success : false, message : `Np reservation with the id ${req.params.id}`});
         }
-        //Make sure that user is the appointment owner
-        if(appointment.user.toString() !== req.user.id && req.user.role !== 'admin'){
+        //Make sure that user is the reservation owner
+        if(reservation.user.toString() !== req.user.id && req.user.role !== 'admin'){
             return res.status(401).json({success : false, message: `User ${req.user.id} is not authorized to delete this bootcamp`});
         }
 
-        await appointment.deleteOne();
+        await reservation.deleteOne();
         res.status(200).json({success : true, data : {}});
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : `Cannot delete the appoinment `
+            message : `Cannot delete the reservation`
         })
     }
 }
