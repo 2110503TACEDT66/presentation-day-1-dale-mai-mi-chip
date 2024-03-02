@@ -59,7 +59,7 @@ app.use(cors());
 app.use(helmet());
 app.use(xss());
 app.use(limiter);
-app.use(`/api/v1/hospitals`, hospitals);
+app.use(`/api/v1/messageShops`, messageShops);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/reservations', reservations);
 app.use(cookieParser());
