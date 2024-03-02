@@ -1,5 +1,5 @@
-const Appointment = require('../models/Appointment');
-const Hospital = require('../models/Hospital')
+const Appointment = require('../models/Reservation');
+const Hospital = require('../models/MessageShop')
 
 //@desc     Get all appoinments 
 //@route    Get /api/v1/appointents
