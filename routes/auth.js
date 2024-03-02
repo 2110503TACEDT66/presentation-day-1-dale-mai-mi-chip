@@ -1,0 +1,13 @@
+const express = require('express');
+const {register, login, getMe, logout} = require('../controllers/auth'); //Get function from /controllers/auth
+
+const router = express.Router(); //Get request from which method 
+
+const  {protect} = require('../middleware/auth')
+
+router.post('/register', register); //If it is from post method and from /register path then do register funciton from above
+router.post('/login', login);
+router.get('/me', protect, getMe);
+router.get('/logout', logout);
+
+module.exports = router;
