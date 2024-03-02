@@ -19,9 +19,9 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
 
-const hospitals = require(`./routes/hospitals`);
+const messageShops = require(`./routes/messageShops`);
 const auth = require('./routes/auth');
-const appointments = require('./routes/appointments');
+const reservations = require('./routes/reservations');
 const helmet = require('helmet');
 const {xss} = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
@@ -61,7 +61,7 @@ app.use(xss());
 app.use(limiter);
 app.use(`/api/v1/hospitals`, hospitals);
 app.use('/api/v1/auth', auth);
-app.use('/api/v1/appointments', appointments);
+app.use('/api/v1/reservations', reservations);
 app.use(cookieParser());
 app.use(mongoSanitize());
 

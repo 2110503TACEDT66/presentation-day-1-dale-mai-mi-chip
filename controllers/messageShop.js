@@ -18,7 +18,7 @@ exports.getVacCenters = (req,res,next) => {
     })
 }
 
-exports.getHospitals = async (req,res,next) => {
+exports.getMessageShops = async (req,res,next) => {
     let query;
 
     const reqQuery = {...req.query}; //If we use const reqQuery = req.query it is pass by ref but this is pass by value
@@ -103,7 +103,7 @@ exports.getHospitals = async (req,res,next) => {
     
 }
 
-exports.getHospital = async (req,res,next) => {
+exports.getMessageShop = async (req,res,next) => {
     try {
         const hospitals = await Hospital.findById(req.params.id);
         if(!hospitals) {
@@ -117,12 +117,12 @@ exports.getHospital = async (req,res,next) => {
     }
 }
 
-exports.createHospital = async (req,res,next) => {
+exports.createMessageShop  = async (req,res,next) => {
     const hospital = await Hospital.create(req.body);
     res.status(201).json({success:true, data:hospital});
 }
 
-exports.updateHospital = async (req,res,next) => {
+exports.updateMessageShop  = async (req,res,next) => {
     try {
         const hospital = await Hospital.findByIdAndUpdate(req.params.id, req.body, {
             new : true,
@@ -140,7 +140,7 @@ exports.updateHospital = async (req,res,next) => {
     
 }
 
-exports.deleteHospital = async (req,res,next) => {
+exports.deleteMessageShop  = async (req,res,next) => {
     try {
         const hospital = await Hospital.findById(req.params.id);
         if(!hospital){
