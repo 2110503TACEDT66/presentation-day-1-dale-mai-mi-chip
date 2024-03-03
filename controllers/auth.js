@@ -33,7 +33,7 @@ try {
     // res.status(200).json({success : true, token});
     sendTokenResponse(user,200,res);
 } catch (error) {
-    res.status(400).json({success : false, message : error.message});
+    res.status(400).json({success : false, massage : error.massage});
     console.log(error.stack)
 }
 }
@@ -139,7 +139,7 @@ exports.getAllUsers = async (req, res, next) => {
     const startIndex = (page-1)*limit || 0;
     const endIndex = page*limit || 0;
 
-    //Count all the MessageShops
+    //Count all the MassageShops
     const total = await User.countDocuments();
 
     //query.skip(startindex) -> Start at what, imit(limit) -> how many results that user want
@@ -148,7 +148,7 @@ exports.getAllUsers = async (req, res, next) => {
     //Output Data
 
     try {
-        const messageShops = await query;
+        const massageShops = await query;
 
         //Execution Pagination 
         const pagination = {};
@@ -169,9 +169,9 @@ exports.getAllUsers = async (req, res, next) => {
 
         res.status(200).json({
             success : true,
-            count :messageShops.length,
+            count :massageShops.length,
             pagination,
-            data :messageShops,
+            data :massageShops,
         });
     } catch (error) {
         res.status(400).json({success:false});
