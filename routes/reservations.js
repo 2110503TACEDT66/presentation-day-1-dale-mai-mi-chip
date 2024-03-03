@@ -1,6 +1,6 @@
 const express = require('express');
 //The difference between {getAppointment} and getAppoinment is {} for the mutiple function/object while without it is a single function/object
-const {getReservations, getReservation, addReservation, updateReservation,deleteReservation} = require('../controllers/reservation'); 
+const {getReservations, getReservation, addReservation, updateReservation,deleteReservation} = require('../controllers/reservations'); 
 
 const router = express.Router({mergeParams : true});
 
