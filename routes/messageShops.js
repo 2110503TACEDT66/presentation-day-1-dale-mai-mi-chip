@@ -1,5 +1,5 @@
 const express = require('express');
-const {getMessageShops, getMessageShop, createMessageShop, updateMessageShop, deleteMessageShop, getVacCenters} = require('../controllers/messageShop');
+const {getMessageShops, getMessageShop, createMessageShop, updateMessageShop, deleteMessageShop, getVacCenters} = require('../controllers/messageShops');
 
 //Swagger
 /**
