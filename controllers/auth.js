@@ -19,10 +19,11 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 exports.register = async (req, res, next) => {
 try {
-    const {name, email, password, role} = req.body;
+    const {name, tel, email, password, role} = req.body;
 
     const user = await User.create({
         name,
+        tel,
         email,
         password,
         role
@@ -32,7 +33,7 @@ try {
     // res.status(200).json({success : true, token});
     sendTokenResponse(user,200,res);
 } catch (error) {
-    res.status(400).json({success : false});
+    res.status(400).json({success : false, massage : error.massage});
     console.log(error.stack)
 }
 }
@@ -90,4 +91,89 @@ exports.getMe = async (req, res, next) => {
         success : true,
         data : user
     });    
+}
+
+exports.getAllUsers = async (req, res, next) => {
+    
+    let query;
+
+    const reqQuery = {...req.query}; //If we use const reqQuery = req.query it is pass by ref but this is pass by value
+
+    const removeFields = ['select', 'sort', 'page', 'limit'];
+
+    removeFields.forEach(param => delete reqQuery[param]);
+
+    console.log('ReqQuery : ' + reqQuery);
+
+
+    //req.query = 
+    let queryStr = JSON.stringify(reqQuery); //Make it into String 
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+    query = User.find(JSON.parse(queryStr));
+
+    //Select the field
+
+    if(req.query.select){
+        const fields = req.query.select.split(',').join(' ');
+        query = query.select(fields);
+    }
+
+    //Sort the fireld
+
+    if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ');
+        query = query.sort(sortBy);
+    } else{
+        query = query.sort('-createdAt');
+    }
+
+    //Pagination
+
+    // ,10 in this case is converting into base 10 number + || 1 -> If the answer is not a valid integer then it will be 1 
+    const page = parseInt(req.query.page, 10) || 1;
+    //how many result in each page default is 25
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    //number of the result ahich appear in each page
+    const startIndex = (page-1)*limit || 0;
+    const endIndex = page*limit || 0;
+
+    //Count all the MassageShops
+    const total = await User.countDocuments();
+
+    //query.skip(startindex) -> Start at what, imit(limit) -> how many results that user want
+    query = query.skip(startIndex).limit(limit);
+
+    //Output Data
+
+    try {
+        const massageShops = await query;
+
+        //Execution Pagination 
+        const pagination = {};
+
+        if(endIndex < total){
+            pagination.next = {
+                page : page + 1,
+                limit
+            }
+        }
+
+        if(startIndex > 0){
+            pagination.prev = {
+                page : page - 1,
+                limit
+            }    
+        }
+
+        res.status(200).json({
+            success : true,
+            count :massageShops.length,
+            pagination,
+            data :massageShops,
+        });
+    } catch (error) {
+        res.status(400).json({success:false});
+    }  
 }
