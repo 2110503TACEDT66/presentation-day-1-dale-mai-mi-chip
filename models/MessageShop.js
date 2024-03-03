@@ -22,7 +22,7 @@ const MessageShopSchema = new mongoose.Schema({
     },
     closetime: {
         type : String,
-        required : [true, 'Please type an close-time']
+        required : [true, 'Please type a close-time']
     }},{
         toJSON : {virtuals : true},
         toObject : {virtuals : true}
@@ -30,18 +30,18 @@ const MessageShopSchema = new mongoose.Schema({
 );
 
 //Reverse populate with virtuals
-MessageShopSchema.virtual('appointments', {
-    ref : 'Appointment',
+MessageShopSchema.virtual('reservations', {
+    ref : 'Reservation',
     localField : '_id',
     foreignField : 'messageShop',
     justOne : false
 });
 
-//Cascade delete appointments when a messageShop is deleted
+//Cascade delete reservations when a messageShop is deleted
 
 MessageShopSchema.pre('deleteOne', { document: true, query: false }, async function(next){
-    console.log(`Appointments being removed from messageShop ${this._id} `);
-    await this.model('Appointment').deleteMany({messageShop: this._id});
+    console.log(`Reservations being removed from messageShop ${this._id} `);
+    await this.model('Reservation').deleteMany({messageShop: this._id});
     next();
 })
 

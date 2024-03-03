@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const AppointmentSchema = new mongoose.Schema({
+const ReservationSchema = new mongoose.Schema({
     resDate : {
         type : Date,
         required : true,
@@ -17,4 +17,4 @@ const AppointmentSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Appointment', AppointmentSchema);
+module.exports = mongoose.model('Reservation', ReservationSchema);
