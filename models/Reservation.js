@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const AppointmentSchema = new mongoose.Schema({
-    apptDate : {
+    resDate : {
         type : Date,
         required : true,
     },
@@ -10,14 +10,10 @@ const AppointmentSchema = new mongoose.Schema({
         ref : 'User',
         required : true
     },
-    hospital : {
+    MessageShop : {
         type : mongoose.Schema.ObjectId,
-        ref : 'Hospital',
+        ref : 'MessageShop',
         required : true
-    },
-    createdAt : {
-        type : Date,
-        default : Date.now
     }
 });
 
