@@ -12,19 +12,19 @@ exports.getReservations = async (req, res, next) => {
     if(req.user.role !== 'admin'){
         query = Reservation.find({user : req.user.id}).populate({
             path: 'messageShop',
-            select : 'name province tel'
+            select : 'name address tel opentime closetime'
         });
     }else {
         if(req.params.messageShopId){
             console.log(req.params.messageShopId);
             query = Reservation.find({messageShop : req.params.messageShopId}).populate({
                 path: 'messageShop',
-                select : 'name province tel'
+                select : 'name address tel opentime closetime'
             });
         }else{
             query = Reservation.find().populate({
                 path: 'messageShop',
-                select : 'name province tel'
+                select : 'name address tel opentime closetime'
             });
         }
         //If you are an admin you can see all
@@ -40,7 +40,7 @@ exports.getReservations = async (req, res, next) => {
         console.log(error);
         return res.status(500).json({
             success : false, 
-            message : 'Cannot find the appoinment'
+            message : 'Cannot find Reservations'
         })
     }
 }
@@ -53,7 +53,7 @@ exports.getReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate({
             path : 'messageShop',
-            select : 'name description tel'
+            select : 'name address tel opentime closetime'
         });
 
         if(!reservation){
@@ -67,7 +67,7 @@ exports.getReservation = async (req, res, next) => {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : 'Cannot find the reservation'
+            message : 'Cannot find the Reservation'
         })
     }
 }
@@ -97,7 +97,7 @@ exports.addReservation = async (req, res, next) => {
 
         //if not an admin cannot create more than 3 Reservations
         if(existedReservation.length >=3 && req.user.role !== 'admin'){
-            return res.status(401).json({success: false, message: `The user with ID ${req.user.id} has already made 3 appointments`})
+            return res.status(400).json({success: false, message: `The user with ID ${req.user.id} has already made 3 reservations`})
         }
 
         const reservation = await Reservation.create(req.body)
@@ -110,7 +110,7 @@ exports.addReservation = async (req, res, next) => {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : 'Cannot create the reservation'
+            message : 'Cannot create Reservation'
         })
     }
 }
@@ -125,6 +125,10 @@ exports.updateReservation = async (req, res, next) => {
         if(!reservation){
             return res.status(404).json({success:false, message : `No reservation with the id of ${req.params.id}`})
         }
+        //Make sure user is the appointment owner
+        if(reservation.user.toString() !== req.user.id && req.user.role !== 'admin'){
+            return res.status(401).json({success:false, message:`User ${req.user.id} is not authorized to update this reservation`});
+        }
         reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
             new : true,
             runValidators : true //For checking Data
@@ -134,7 +138,7 @@ exports.updateReservation = async (req, res, next) => {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : `Cannot update the reservation `
+            message : `Cannot update Reservation`
         })
     }
 }
@@ -150,11 +154,11 @@ exports.deleteReservation = async (req, res, next) => {
         const reservation = await Reservation.findById(req.params.id);
 
         if(!reservation){
-            return res.status(404).json({success : false, message : `Np reservation with the id ${req.params.id}`});
+            return res.status(404).json({success : false, message : `No reservation with the id ${req.params.id}`});
         }
         //Make sure that user is the reservation owner
         if(reservation.user.toString() !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success : false, message: `User ${req.user.id} is not authorized to delete this bootcamp`});
+            return res.status(401).json({success : false, message: `User ${req.user.id} is not authorized to delete this reservation`});
         }
 
         await reservation.deleteOne();
@@ -163,7 +167,7 @@ exports.deleteReservation = async (req, res, next) => {
         console.log(error.stack);
         return res.status(500).json({
             success : false, 
-            message : `Cannot delete the reservation`
+            message : `Cannot delete Reservation`
         })
     }
 }
