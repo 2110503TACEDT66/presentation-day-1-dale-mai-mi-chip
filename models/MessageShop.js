@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const HospitalSchema = new mongoose.Schema({
+const MessageShopSchema = new mongoose.Schema({
     
     name:{
         type : String,
@@ -13,25 +13,16 @@ const HospitalSchema = new mongoose.Schema({
         type : String,
         required : [true, 'Please add an address']
     },
-    district: {
-        type : String,
-        required : [true, 'Please type a district']
-    },
-    province : {
-        type : String,
-        required : [true, 'Please type a province']
-    },
-    postalcode : {
-        type : String,
-        required : [true, 'Please type a postalcode'],
-        maxlength : [5, 'Postal Code can not be more than 5 digits']
-    },
-    tel : {
+    tel: {
         type : String,
     },
-    region : {
+    opentime: {
         type : String,
-        required : [true, 'Please type a region']
+        required : [true, 'Please type an open-time']
+    },
+    closetime: {
+        type : String,
+        required : [true, 'Please type a close-time']
     }},{
         toJSON : {virtuals : true},
         toObject : {virtuals : true}
@@ -39,20 +30,19 @@ const HospitalSchema = new mongoose.Schema({
 );
 
 //Reverse populate with virtuals
-
-HospitalSchema.virtual('appointments', {
-    ref : 'Appointment',
+MessageShopSchema.virtual('reservations', {
+    ref : 'Reservation',
     localField : '_id',
-    foreignField : 'hospital',
+    foreignField : 'messageShop',
     justOne : false
 });
 
-//Cascade delete appointments when a hospital is deleted
+//Cascade delete reservations when a messageShop is deleted
 
-HospitalSchema.pre('deleteOne', { document: true, query: false }, async function(next){
-    console.log(`Appointments being removed from hospital ${this._id} `);
-    await this.model('Appointment').deleteMany({hospital: this._id});
+MessageShopSchema.pre('deleteOne', { document: true, query: false }, async function(next){
+    console.log(`Reservations being removed from messageShop ${this._id} `);
+    await this.model('Reservation').deleteMany({messageShop: this._id});
     next();
 })
 
-module.exports = mongoose.model('Hospital', HospitalSchema);
+module.exports = mongoose.model('MessageShop', MessageShopSchema);
