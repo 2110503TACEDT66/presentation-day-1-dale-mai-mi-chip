@@ -19,7 +19,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
 
-const messageShops = require(`./routes/messageShops`);
+const messageShops = require(`./routes/massageShops`);
 const auth = require('./routes/auth');
 const reservations = require('./routes/reservations');
 const helmet = require('helmet');

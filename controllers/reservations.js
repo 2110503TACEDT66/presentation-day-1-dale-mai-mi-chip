@@ -1,5 +1,5 @@
 const Reservation = require('../models/Reservation');
-const MessageShop = require('../models/MessageShop')
+const MessageShop = require('../models/MassageShop')
 
 //@desc     Get all appoinments 
 //@route    Get /api/v1/appointents

@@ -1,4 +1,4 @@
-const MessageShop = require('../models/MessageShop');
+const MessageShop = require('../models/MassageShop');
 const vacCenter = require('../models/VacCenter');
 
 //@desc     Get vaccine centers
