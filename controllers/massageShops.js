@@ -1,8 +1,8 @@
-const MessageShop = require('../models/MessageShop');
+const MassageShop = require('../models/MassageShop');
 const vacCenter = require('../models/VacCenter');
 
 //@desc     Get vaccine centers
-//@route    GET /api/v1/messageShops/vacCenters/
+//@route    GET /api/v1/massageShops/vacCenters/
 //@access   Public
 
 exports.getVacCenters = (req,res,next) => {
@@ -18,7 +18,7 @@ exports.getVacCenters = (req,res,next) => {
     })
 }
 
-exports.getMessageShops = async (req,res,next) => {
+exports.getMassageShops = async (req,res,next) => {
     let query;
 
     const reqQuery = {...req.query}; //If we use const reqQuery = req.query it is pass by ref but this is pass by value
@@ -34,7 +34,7 @@ exports.getMessageShops = async (req,res,next) => {
     let queryStr = JSON.stringify(reqQuery); //Make it into String 
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-    query = MessageShop.find(JSON.parse(queryStr)).populate('reservations');
+    query = MassageShop.find(JSON.parse(queryStr)).populate('reservations');
 
     //Select the field
 
@@ -63,8 +63,8 @@ exports.getMessageShops = async (req,res,next) => {
     const startIndex = (page-1)*limit;
     const endIndex = page*limit;
 
-    //Count all the MessageShops
-    const total = await MessageShop.countDocuments();
+    //Count all the MassageShops
+    const total = await MassageShop.countDocuments();
 
     //query.skip(startindex) -> Start at what, imit(limit) -> how many results that user want
     query = query.skip(startIndex).limit(limit);
@@ -72,7 +72,7 @@ exports.getMessageShops = async (req,res,next) => {
     //Output Data
 
     try {
-        const messageShops = await query;
+        const massageShops = await query;
 
         //Execution Pagination 
         const pagination = {};
@@ -93,9 +93,9 @@ exports.getMessageShops = async (req,res,next) => {
 
         res.status(200).json({
             success : true,
-            count :messageShops.length,
+            count :massageShops.length,
             pagination,
-            data :messageShops,
+            data :massageShops,
         });
     } catch (error) {
         res.status(400).json({success:false});
@@ -103,36 +103,36 @@ exports.getMessageShops = async (req,res,next) => {
     
 }
 
-exports.getMessageShop = async (req,res,next) => {
+exports.getMassageShop = async (req,res,next) => {
     try {
-        const messageShops = await MessageShop.findById(req.params.id);
-        if(!messageShops) {
+        const massageShops = await MassageShop.findById(req.params.id);
+        if(!massageShops) {
             res.status(400).json({success:false});
         }
         else{
-            res.status(200).json({success:true ,data : messageShops});
+            res.status(200).json({success:true ,data : massageShops});
         }
     } catch (error) {
         res.status(400).json({success:false});
     }
 }
 
-exports.createMessageShop  = async (req,res,next) => {
-    const messageShop = await MessageShop.create(req.body);
-    res.status(201).json({success:true, nowCreate : messageShop});
+exports.createMassageShop  = async (req,res,next) => {
+    const massageShop = await MassageShop.create(req.body);
+    res.status(201).json({success:true, nowCreate : massageShop});
 }
 
-exports.updateMessageShop  = async (req,res,next) => {
+exports.updateMassageShop  = async (req,res,next) => {
     try {
-        const messageShop = await MessageShop.findByIdAndUpdate(req.params.id, req.body, {
+        const massageShop = await MassageShop.findByIdAndUpdate(req.params.id, req.body, {
             new : true,
             runValidators: true
         })
-        if (!messageShop){
-            res.status(400).json({success:false, message :' There is no messageShop!'});
+        if (!massageShop){
+            res.status(400).json({success:false, message :' There is no massageShop!'});
         }
         else {
-            res.status(200).json({success:true, data : messageShop});
+            res.status(200).json({success:true, data : massageShop});
         }
     } catch (error) {
         res.status(400).json({success:false,  message : error.message});
@@ -140,14 +140,14 @@ exports.updateMessageShop  = async (req,res,next) => {
     
 }
 
-exports.deleteMessageShop  = async (req,res,next) => {
+exports.deleteMassageShop  = async (req,res,next) => {
     try {
-        const messageShop = await MessageShop.findById(req.params.id);
-        if(!messageShop){
+        const massageShop = await MassageShop.findById(req.params.id);
+        if(!massageShop){
             return res.status(404).json({success:false, message : `Bootcamp not found with id of ${req.params.id}`});
         }
 
-        await messageShop.deleteOne();
+        await massageShop.deleteOne();
         res.status(200).json({success : true, data : {}})
     } catch (error) {
         console.log(error.stack);

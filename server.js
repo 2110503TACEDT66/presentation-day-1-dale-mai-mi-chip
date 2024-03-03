@@ -19,7 +19,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
 
-const messageShops = require(`./routes/messageShops`);
+const massageShops = require(`./routes/massageShops`);
 const auth = require('./routes/auth');
 const reservations = require('./routes/reservations');
 const helmet = require('helmet');
@@ -59,7 +59,7 @@ app.use(cors());
 app.use(helmet());
 app.use(xss());
 app.use(limiter);
-app.use(`/api/v1/messageShops`, messageShops);
+app.use(`/api/v1/massageShops`, massageShops);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/reservations', reservations);
 app.use(cookieParser());
@@ -70,7 +70,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));
 
 process.on('unhandledRejection', (err, promise) => {
-    console.log(`Error ${err.message}`);
+    console.log(`Error ${err.massage}`);
     server.close(() => process.exit(1));
 })
 
