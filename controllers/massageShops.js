@@ -144,7 +144,7 @@ exports.deleteMassageShop  = async (req,res,next) => {
     try {
         const massageShop = await MassageShop.findById(req.params.id);
         if(!massageShop){
-            return res.status(404).json({success:false, message : `Bootcamp not found with id of ${req.params.id}`});
+            return res.status(404).json({success:false, message : `MassageShop not found with id of ${req.params.id}`});
         }
 
         await massageShop.deleteOne();

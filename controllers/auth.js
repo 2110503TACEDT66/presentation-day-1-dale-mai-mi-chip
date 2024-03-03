@@ -33,7 +33,7 @@ try {
     // res.status(200).json({success : true, token});
     sendTokenResponse(user,200,res);
 } catch (error) {
-    res.status(400).json({success : false, massage : error.massage});
+    res.status(400).json({success : false, message : error.message});
     console.log(error.stack)
 }
 }
