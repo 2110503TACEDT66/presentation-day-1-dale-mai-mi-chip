@@ -34,7 +34,7 @@ exports.getMessageShops = async (req,res,next) => {
     let queryStr = JSON.stringify(reqQuery); //Make it into String 
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-    query = MessageShop.find(JSON.parse(queryStr)).populate('appointments');
+    query = MessageShop.find(JSON.parse(queryStr)).populate('reservations');
 
     //Select the field
 
@@ -57,7 +57,7 @@ exports.getMessageShops = async (req,res,next) => {
     // ,10 in this case is converting into base 10 number + || 1 -> If the answer is not a valid integer then it will be 1 
     const page = parseInt(req.query.page, 10) || 1;
     //how many result in each page default is 25
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const limit = parseInt(req.query.limit, 10) || 5;
 
     //number of the result ahich appear in each page
     const startIndex = (page-1)*limit;
@@ -119,7 +119,7 @@ exports.getMessageShop = async (req,res,next) => {
 
 exports.createMessageShop  = async (req,res,next) => {
     const messageShop = await MessageShop.create(req.body);
-    res.status(201).json({success:true, data:messageShop});
+    res.status(201).json({success:true, nowCreate : messageShop});
 }
 
 exports.updateMessageShop  = async (req,res,next) => {
