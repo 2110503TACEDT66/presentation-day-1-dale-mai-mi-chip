@@ -1,15 +1,15 @@
 const MassageShop = require('../models/MassageShop');
-const vacCenter = require('../models/VacCenter');
+const vacCenter = require('../models/MassageCenter');
 
 //@desc     Get vaccine centers
 //@route    GET /api/v1/massageShops/vacCenters/
 //@access   Public
 
-exports.getVacCenters = (req,res,next) => {
+exports.getMassageCenters = (req,res,next) => {
     vacCenter.getAll((err, data) => {
         if(err){
             res.status(500).send({
-                message : err.message || "Some error occurred while retrieving Vaccine Cneters."
+                message : err.message || "Some error occurred while retrieving Massage Centers."
             });
         }
         else {
