@@ -10,7 +10,7 @@ const ReservationSchema = new mongoose.Schema({
         ref : 'User',
         required : true
     },
-    MessageShop : {
+    messageShop : {
         type : mongoose.Schema.ObjectId,
         ref : 'MessageShop',
         required : true

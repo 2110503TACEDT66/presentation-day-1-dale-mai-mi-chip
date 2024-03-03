@@ -15,6 +15,7 @@ const MessageShopSchema = new mongoose.Schema({
     },
     tel: {
         type : String,
+        required : [true, 'Please add an telephone number']
     },
     opentime: {
         type : String,
