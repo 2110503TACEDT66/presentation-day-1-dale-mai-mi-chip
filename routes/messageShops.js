@@ -205,7 +205,7 @@ const router = express.Router();
 const {protect, authorize} = require('../middleware/auth');
 
 //Re-route into other resource routers
-router.use('/:hospitalId/reservations/', reservationRouter);
+router.use('/:messageShopId/reservations/', reservationRouter);
 
 router.route('/vacCenters').get(getVacCenters);
 router.route('/').get(getMessageShops).post(protect, authorize('admin'), createMessageShop);
