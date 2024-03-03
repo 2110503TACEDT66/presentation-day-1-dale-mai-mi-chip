@@ -7,18 +7,17 @@ const UserSchema = new mongoose.Schema({
         type : String,
         required : [true, 'Please add a name']
     },
+    tel : {
+        type : String,
+        unique : true,
+        required : [true, 'Please add your telephone number']
+    },
     email : {
         type : String,
         required : [true, 'Please add a email'],
-        unique : true,
         match : [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/, 'Please add a valid email'
         ]
-    },
-    role : {
-        type : String,
-        enum : ['user', 'admin'],
-        default : 'user'
     },
     password : {
         type : String,
@@ -28,11 +27,11 @@ const UserSchema = new mongoose.Schema({
     },
     resetPassWordtoken : String,
     resetPassWordExpire : Date,
-    createAt : {
-        type : Date,
-        default : Date.now
+    role : {
+        type : String,
+        enum : ['user', 'admin'],
+        default : 'user'
     }
-
 });
 
 //Encrpt password using bcrypt
