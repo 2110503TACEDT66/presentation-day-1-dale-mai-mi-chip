@@ -44,7 +44,7 @@ const swaggerOptions = {
         },
         servers : [
             {
-                url : 'http://localhost:5010/api/v1'
+                url : 'http://localhost:5000/api/v1'
             }
         ],
     },
@@ -59,14 +59,14 @@ app.use(cors());
 app.use(helmet());
 app.use(xss());
 app.use(limiter);
-app.use(`/api/v1/hospitals`, hospitals);
+app.use(`/api/v1/messageShops`, messageShops);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/reservations', reservations);
 app.use(cookieParser());
 app.use(mongoSanitize());
 
 
-const PORT = process.env.PORT || 5010;
+const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));
 
 process.on('unhandledRejection', (err, promise) => {

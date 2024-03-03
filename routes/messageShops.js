@@ -1,5 +1,5 @@
 const express = require('express');
-const {getHospitals, getHospital, createHospital, updateHospital, deleteHospital, getVacCenters} = require('../controllers/hospitals');
+const {getMessageShops, getMessageShop, createMessageShop, updateMessageShop, deleteMessageShop, getVacCenters} = require('../controllers/messageShop');
 
 //Swagger
 /**
@@ -198,17 +198,17 @@ const {getHospitals, getHospital, createHospital, updateHospital, deleteHospital
 
 
 //Include other resource routers
-const appointmentRouter = require('./appointments');
+const reservationRouter = require('./reservations');
 
 const router = express.Router();
 
 const {protect, authorize} = require('../middleware/auth');
 
 //Re-route into other resource routers
-router.use('/:hospitalId/appointments/', appointmentRouter);
+router.use('/:hospitalId/reservations/', reservationRouter);
 
 router.route('/vacCenters').get(getVacCenters);
-router.route('/').get(getHospitals).post(protect, authorize('admin'), createHospital);
-router.route('/:id').get(getHospital).put(protect, authorize('admin'), updateHospital).delete(protect, authorize('admin'), deleteHospital);
+router.route('/').get(getMessageShops).post(protect, authorize('admin'), createMessageShop);
+router.route('/:id').get(getMessageShop).put(protect, authorize('admin'), updateMessageShop).delete(protect, authorize('admin'), deleteMessageShop);
 
 module.exports = router;
