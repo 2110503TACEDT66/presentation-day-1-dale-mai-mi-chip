@@ -1,4 +1,4 @@
-@startuml
+@startuml name
 left to right direction
 package "Massage Reservation"{
     class "<<Application>>\nMassageService" as MassageService{}
