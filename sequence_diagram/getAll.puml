@@ -1,23 +1,30 @@
-@startuml Manage MassageShop (GET ALL)
-
-header Sample MassageCenter Sequence Diagram
+@startuml Get all Reservation
+header Sample MassageShopReservation Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage MassageShop (GET ALL)"
+title "Get all Reservations (GET)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
-participant "<<router>>\n:massageShops" as routerMassageShops
-participant "<<controllers>>\n:massageShops" as controllersMassageShops
-participant "<<model>>\n:MassageShop" as modelMassageShop
-database "<<MongoDB>>\n:massageShops" as MassageShopsDatabase
+participant "<<router>>\n:reservations" as routerReservation
+participant "<<controllers>>\n:reservations" as controllersReservation
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as ReservationDatabase
 
-client->server ++:req.get('/massageShops')
-server->routerMassageShops ++:app.use('/massageShops',massageShops)
-routerMassageShops -> controllersMassageShops ++:getMassageShops()
-controllersMassageShops->modelMassageShop ++:find()
-modelMassageShop ->MassageShopsDatabase ++: MassageShopSchema
-MassageShopsDatabase --> modelMassageShop --: massageShops
-controllersMassageShops <-- modelMassageShop --:massageShops
-controllersMassageShops->client --:response
+client->server ++:req.get('/api/v1/reservations')
+server->routerReservation ++:app.use('/reservations', reservations)
+routerReservation -> controllersReservation ++: getReservations(req, res, next)
+alt req.user.role = admin
+  controllersReservation->modelReservation ++: find()
+else req.user.role = user
+  controllersReservation->modelReservation ++: findById(req.params.id)
+end
 
+alt reservation exists
+  modelReservation ->ReservationDatabase ++: ReservationSchema
+  ReservationDatabase --> modelReservation --: reservation
+  controllersReservation <-- modelReservation --: reservation
+  controllersReservation ->client --: res.status(200)
+else reservation does not exist
+  controllersReservation ->client --: res.status(500)
+end
 @enduml

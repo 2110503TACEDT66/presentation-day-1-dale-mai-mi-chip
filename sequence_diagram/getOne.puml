@@ -1,23 +1,29 @@
-@startuml Manage HMassageShop (GET ONE)
+@startuml Get Reservation (GET)
 
-header Sample MassageCenter Sequence Diagram
+header Sample MassageShopReservation Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage MassageShop (GET ONE)"
+title "Get one Reservation (GET)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
-participant "<<router>>\n:massageShops" as routerMassageShops
-participant "<<controllers>>\n:massageShops" as controllersMassageShops
-participant "<<model>>\n:MassageShop" as modelMassageShop
-database "<<MongoDB>>\n:massageShops" as MassageShopsDatabase
+participant "<<router>>\n:reservations" as routerReservation
+participant "<<controllers>>\n:reservations" as controllersReservation
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as ReservationDatabase
 
-client->server ++:req.get('/massageShops/:id')
-server->routerMassageShops ++:app.use('/massageShops',massageShops)
-routerMassageShops -> controllersMassageShops ++:getMassageShop()
-controllersMassageShops->modelMassageShop ++:findById(req.params.id)
-modelMassageShop ->MassageShopsDatabase ++: MassageShopSchema
-MassageShopsDatabase --> modelMassageShop --: massageShop
-controllersMassageShops <-- modelMassageShop --:massageShop
-controllersMassageShops->client --:response
+
+client->server ++:req.get('reservations/:id')
+server->routerReservation ++:app.use('/reservations', reservations)
+routerReservation -> controllersReservation ++: getReservation()
+controllersReservation->modelReservation ++: findById(req.params.id)
+
+alt reservation exists
+  modelReservation ->ReservationDatabase ++: reservationSchema
+  ReservationDatabase --> modelReservation --: reservation
+  controllersReservation <-- modelReservation --: reservation
+  controllersReservation->client --: res.status(200)
+else reservation does not exist
+  controllersReservation->client --: res.status(400)
+end
 
 @enduml
