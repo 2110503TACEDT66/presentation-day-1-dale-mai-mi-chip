@@ -111,7 +111,7 @@ exports.addReservation = async (req, res, next) => {
 
         //if not an admin cannot create more than 3 Reservations
         if(existedReservation.length >=3 && req.user.role !== 'admin'){
-            return res.status(400).json({success: false, massage: `The user with ID ${req.user.id} has already made 3 reservations`})
+            return res.status(400).json({success: false, message: `The user with ID ${req.user.id} has already made 3 reservations`})
         }
 
         const reservation = await Reservation.create(req.body)

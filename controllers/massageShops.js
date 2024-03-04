@@ -1,15 +1,15 @@
 const MassageShop = require('../models/MassageShop');
-const vacCenter = require('../models/VacCenter');
+const vacCenter = require('../models/MassageCenter');
 
 //@desc     Get vaccine centers
 //@route    GET /api/v1/massageShops/vacCenters/
 //@access   Public
 
-exports.getVacCenters = (req,res,next) => {
+exports.getMassageCenters = (req,res,next) => {
     vacCenter.getAll((err, data) => {
         if(err){
             res.status(500).send({
-                message : err.message || "Some error occurred while retrieving Vaccine Cneters."
+                message : err.message || "Some error occurred while retrieving Massage Centers."
             });
         }
         else {
@@ -144,7 +144,7 @@ exports.deleteMassageShop  = async (req,res,next) => {
     try {
         const massageShop = await MassageShop.findById(req.params.id);
         if(!massageShop){
-            return res.status(404).json({success:false, message : `Bootcamp not found with id of ${req.params.id}`});
+            return res.status(404).json({success:false, message : `MassageShop not found with id of ${req.params.id}`});
         }
 
         await massageShop.deleteOne();
