@@ -1,6 +1,7 @@
 const User = require('../models/User');
 
 const sendTokenResponse = (user, statusCode, res) => {
+    const {name, tel, email, password, role} = user;
     const token = user.getSignedJwtToken();
     const option = {
         expires : new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE *24*60*60*1000), //milli sec
@@ -10,7 +11,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     if(process.env.NODE_ENV === 'production'){
         option.secure = true;
     }
-    res.status(statusCode).cookie('token', token, option).json({success : true, token});
+    res.status(statusCode).cookie('token', token, option).json({success : true, token, name, role});
 }
 
 //@desc     Register user
@@ -33,7 +34,7 @@ try {
     // res.status(200).json({success : true, token});
     sendTokenResponse(user,200,res);
 } catch (error) {
-    res.status(400).json({success : false, massage : error.massage});
+    res.status(400).json({success : false, message : error.message});
     console.log(error.stack)
 }
 }
