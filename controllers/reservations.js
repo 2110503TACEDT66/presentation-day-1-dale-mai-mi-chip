@@ -71,7 +71,7 @@ exports.getReservation = async (req, res, next) => {
             return res.status(401).json({success:false, message:`User ${req.user.id} is not authorized to get this reservation`});
         }
         res.status(200).json({
-            success : true, 
+            success : true,  
             data : reservation
         })
     } catch (error) {
