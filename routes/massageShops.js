@@ -1,5 +1,5 @@
 const express = require('express');
-const {getMassageShops, getMassageShop, createMassageShop, updateMassageShop, deleteMassageShop, getVacCenters} = require('../controllers/massageShops');
+const {getMassageShops, getMassageShop, createMassageShop, updateMassageShop, deleteMassageShop, getMassageCenters} = require('../controllers/massageShops');
 
 //Swagger
 /**
@@ -206,8 +206,9 @@ const {protect, authorize} = require('../middleware/auth');
 
 //Re-route into other resource routers
 router.use('/:massageShopId/reservations/', reservationRouter);
-
-router.route('/vacCenters').get(getVacCenters);
+console.log("Check1");
+router.route('/massageCenters').get(getMassageCenters);
+console.log("Check2");
 router.route('/').get(getMassageShops).post(protect, authorize('admin'), createMassageShop);
 router.route('/:id').get(getMassageShop).put(protect, authorize('admin'), updateMassageShop).delete(protect, authorize('admin'), deleteMassageShop);
 
