@@ -36,15 +36,6 @@ MassageShopSchema.virtual('reservations', {
     localField : '_id',
     foreignField : 'massageShop',
     justOne : false
-});
-
-
-//Cascade delete reservations when a massageShop is deleted
-
-MassageShopSchema.pre('deleteOne', { document: true, query: false }, async function(next){
-    console.log(`Reservations being removed from massageShop ${this._id} `);
-    await this.model('Reservation').deleteMany({massageShop: this._id});
-    next();
 })
 
 MassageShopSchema.virtual('doctors', {
@@ -52,12 +43,23 @@ MassageShopSchema.virtual('doctors', {
     localField : '_id',
     foreignField : 'massageShop',
     justOne : false
-});
+})
+
+
+//Cascade delete reservations when a massageShop is deleted
 
 MassageShopSchema.pre('deleteOne', { document: true, query: false }, async function(next){
-    console.log(`Doctors being removed from massageShop ${this._id} `);
-    await this.model('Doctor').deleteMany({massageShop: this._id});
-    next();
+    try {
+        console.log(`Reservations being removed from massageShop ${this._id} `);
+        await this.model('Reservation').deleteMany({massageShop: this._id});
+        await this.model('Doctor').deleteMany({massageShop: this._id});
+        next();
+    } catch (error) {
+        console.error(`Error deleting related documents: ${error}`);
+        next(error);
+    }
 })
+
+
 
 module.exports = mongoose.model('MassageShop', MassageShopSchema);
