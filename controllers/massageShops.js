@@ -2,7 +2,7 @@ const MassageShop = require('../models/MassageShop');
 const vacCenter = require('../models/MassageCenter');
 
 //@desc     Get vaccine centers
-//@route    GET /api/v1/massageShops/vacCenters/
+//@route    GET /api/v1/massageShops/messageCenters/
 //@access   Public
 
 exports.getMassageCenters = (req,res,next) => {
