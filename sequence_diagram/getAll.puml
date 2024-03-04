@@ -1,23 +1,32 @@
-@startuml Manage MassageShop (GET ALL)
+@startuml Manage Reservation (GET ALL)
 
 header Sample MassageCenter Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage MassageShop (GET ALL)"
+title "Manage Reservation (GET ALL)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
-participant "<<router>>\n:massageShops" as routerMassageShops
-participant "<<controllers>>\n:massageShops" as controllersMassageShops
-participant "<<model>>\n:MassageShop" as modelMassageShop
-database "<<MongoDB>>\n:massageShops" as MassageShopsDatabase
+participant "<<router>>\n:Reservation" as routerReservation
+participant "<<controllers>>\n:Reservation" as controllersReservation
+participant "<<model>>\n:Reservation" as modelMassageShop
+database "<<MongoDB>>\n:Reservation" as ReservationsDatabase
 
-client->server ++:req.get('/massageShops')
-server->routerMassageShops ++:app.use('/massageShops',massageShops)
+client->server ++:req.get('/Reservation')
+server->routerReservation ++:app.use('/Reservation',massageShops)
 routerMassageShops -> controllersMassageShops ++:getMassageShops()
-controllersMassageShops->modelMassageShop ++:find()
-modelMassageShop ->MassageShopsDatabase ++: MassageShopSchema
-MassageShopsDatabase --> modelMassageShop --: massageShops
-controllersMassageShops <-- modelMassageShop --:massageShops
-controllersMassageShops->client --:response
+alt req.user.role = admin
+  controllersReservation->modelReservation ++: find()
+else req.user.role = user
+  controllersReservation->modelReservation ++: findById(req.params.id)
+end
+
+alt Reservation exists
+  modelReservation ->ReservationDatabase ++: ReservationSchema
+  ReservationDatabase --> modelReservation --: Reservation
+  controllersReservation <-- modelReservation --: Reservation
+  controllersReservation->client --: res.status(200)
+else Reservation does not exist
+  controllersReservation->client --: res.status(500)
+end
 
 @enduml
