@@ -6,7 +6,9 @@ const router = express.Router({mergeParams : true});
 
 const {protect, authorize} = require('../middleware/auth');
 router.route('/').get(protect, getDoctors).post(protect, authorize('admin'), addDoctor);
+
 router.route('/:id').get(protect, getDoctor).put(protect, authorize('admin', 'user'),updateDoctor).delete(protect,authorize('admin', 'user') , deleteDoctor);
+
 module.exports = router;
 
 

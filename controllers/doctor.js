@@ -153,9 +153,6 @@ exports.deleteDoctor = async (req, res, next) => {
             return res.status(404).json({success : false, message : `No doctor with the id ${req.params.id}`});
         }
         //Make sure that user is the doctor owner
-        if(doctor.user.toString() !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success : false, message: `User ${req.user.id} is not authorized to delete this doctor`});
-        }
 
         await doctor.deleteOne();
         res.status(200).json({success : true, data : {}});
