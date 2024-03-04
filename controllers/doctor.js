@@ -1,4 +1,4 @@
-const Reservation = require('../models/Reservation');
+const Reservation = require('../models/Doctors');
 const MassageShop = require('../models/MassageShop')
 
 //@desc     Get all appoinments 
@@ -103,8 +103,6 @@ exports.addReservation = async (req, res, next) => {
         //add user Id to req.body
         req.body.user = req.user.id;
 
-        console.log("Open time : " + massageShop.opentime);
-
         //Check for existed appointment
         const existedReservation = await Reservation.find({user : req.user.id});
 
@@ -114,20 +112,6 @@ exports.addReservation = async (req, res, next) => {
         //if not an admin cannot create more than 3 Reservations
         if(existedReservation.length >=3 && req.user.role !== 'admin'){
             return res.status(400).json({success: false, message: `The user with ID ${req.user.id} has already made 3 reservations`})
-        }
-
-        const reservationTime = new Date(req.body.resDate);
-
-        console.log("Before Change : " + reservationTime);
-
-        const timeValue = reservationTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-        const secondToLastCharacter = timeValue.charAt(timeValue.length - 2);
-        console.log(secondToLastCharacter);
-
-        console.log("Reservation :" + timeValue + " Open : " + massageShop.opentime + " Close : " + massageShop.closetime)
-
-        if ((secondToLastCharacter === "A" && timeValue < massageShop.opentime )|| (secondToLastCharacter === "P" && timeValue > massageShop.closetime )) {
-            return res.status(400).json({ success: false, message: 'Reservation time is outside of business hours' });
         }
 
         const reservation = await Reservation.create(req.body)

@@ -1,5 +1,5 @@
 const MassageShop = require('../models/MassageShop');
-const vacCenter = require('../models/MassageCenter');
+const vacCenter = require('../models/Doctor');
 
 //@desc     Get vaccine centers
 //@route    GET /api/v1/massageShops/vacCenters/
