@@ -15,9 +15,15 @@ client->server ++:req.post('/massageShops')
 server->routerMassageShops ++:app.use('/massageShops',massageShops)
 routerMassageShops -> controllersMassageShops ++:createMassageShop()
 controllersMassageShops->modelMassageShop ++:create(req.body)
-modelMassageShop ->MassageShopsDatabase ++: MassageShopSchema
-MassageShopsDatabase --> modelMassageShop --: massageShop
-controllersMassageShops <-- modelMassageShop --:massageShop
-controllersMassageShops->client --:response
+
+alt edited successfully
+ modelReservation ->MessageShopProviderDatabase ++: ReservationSchema
+  MessageShopProviderDatabase --> modelReservation --: Reservations
+  controllersReservation <-- modelReservation --: Reservations
+  controllersReservation->client --: res.status(200).json({success: true, data: Reservation})
+else error in editing
+  controllersReservation->client --: res.status(500).json({ success: false })
+end
+
 
 @enduml
