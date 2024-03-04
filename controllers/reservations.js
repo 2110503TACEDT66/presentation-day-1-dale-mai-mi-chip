@@ -8,14 +8,17 @@ const MassageShop = require('../models/MassageShop')
 
 exports.getReservations = async (req, res, next) => {
     let query;
+    console.log("Yo")
 
     if(req.user.role !== 'admin'){
+        console.log("Yo2")
         if(req.params.massageShopId){
             console.log(req.params.massageShopId);
             query = Reservation.find({massageShop : req.params.massageShopId, user : req.user.id}).populate({
                 path: 'massageShop',
                 select : 'name address tel opentime closetime'
-            });
+            },
+            );
         }else{
             query = Reservation.find({user : req.user.id}).populate({
                 path: 'massageShop',
@@ -59,16 +62,14 @@ exports.getReservations = async (req, res, next) => {
 
 exports.getReservation = async (req, res, next) => {
     try {
+        console.log("Check 11")
         const reservation = await Reservation.findById(req.params.id).populate({
             path : 'massageShop',
             select : 'name address tel opentime closetime'
         });
-
+        console.log("Check 22")
         if(!reservation){
             return res.status(404).json({success:false, message:`No reservation with the id of ${req.params.id}` });
-        }
-        if(reservation.user.toString() !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success:false, message:`User ${req.user.id} is not authorized to get this reservation`});
         }
         res.status(200).json({
             success : true,  

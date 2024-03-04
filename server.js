@@ -22,6 +22,7 @@ const swaggerUI = require('swagger-ui-express');
 const massageShops = require(`./routes/massageShops`);
 const auth = require('./routes/auth');
 const reservations = require('./routes/reservations');
+const doctor = require(`./routes/doctor`);
 const helmet = require('helmet');
 const {xss} = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
@@ -62,6 +63,7 @@ app.use(limiter);
 app.use(`/api/v1/massageShops`, massageShops);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/reservations', reservations);
+app.use(`/api/v1/doctor`, doctor);
 app.use(cookieParser());
 app.use(mongoSanitize());
 
