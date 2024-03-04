@@ -72,7 +72,7 @@ exports.getReservation = async (req, res, next) => {
             return res.status(404).json({success:false, message:`No reservation with the id of ${req.params.id}` });
         }
         res.status(200).json({
-            success : true, 
+            success : true,  
             data : reservation
         })
     } catch (error) {

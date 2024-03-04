@@ -1,0 +1,78 @@
+@startuml
+left to right direction
+package "Massage Reservation"{
+    class "<<Application>>\nMassageService" as MassageService{}
+
+    
+    class "<<Resource>>\nMassageShops" as ResourceMassageShops{
+        <<GET>> +getMassageShops():MassageShop
+        <<POST>> +createMassageShop():MassageShop
+    }
+
+    class "<<Resource>>\nMassageShop" as ResourceMassageShop {
+        <<GET>> +getMassageShop(): MassageShop
+        <<PUT>> +updateMassageShop(): MassageShop
+        <<DELETE>> +deleteMassageShop(): void
+    }
+
+    class "<<Representation>>\nMassageShop" as RepresentationMassageShop {
+        -name
+        -address
+        -tel
+        -opentime
+        -closetime
+    }
+    
+    
+    class "<<Resource>>\nReservations" as ResourceReservations{
+        <<GET>> +getReservations():Reservation
+        <<POST>> +createReservation():Reservation
+    }
+
+    class "<<Resource>>\nReservation" as ResourceReservation {
+        <<GET>> +getReservation(): Reservation
+        <<PUT>> +updateReservation(): Reservation
+        <<DELETE>> +deleteReservation(): void
+    }
+
+    class "<<Representation>>\nReservation" as RepresentationReservation {
+        -resDate
+        -user
+        -massageShop
+    }
+
+
+    class "<<Resource>>\nUsers" as ResourceUsers{
+        <<GET>> +getUsers():User
+        <<POST>> +createUser():User
+    }
+
+    class "<<Resource>>\nUser" as ResourceUser {
+        <<GET>> +getUser(): User
+        <<PUT>> +updateUser(): User
+        <<DELETE>> +deleteUser(): void
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser {
+        -name
+        -tel
+        -email
+        -password
+        -resetPassWordtoken
+        -resetPassWordExpire
+        -role
+    }
+}
+MassageService ..> ResourceUsers:"/Users\n<<Path>>"
+ResourceUsers ..> ResourceUser: "/{UserId}\n<<Path>>"
+ResourceUser ..> RepresentationUser: "<<use>>"
+
+MassageService ..> ResourceReservations:"/Reservations\n<<Path>>"
+ResourceReservations ..> ResourceReservation: "/{ReservationId}\n<<Path>>"
+ResourceReservation ..> RepresentationReservation: "<<use>>"
+
+MassageService ..> ResourceMassageShops:"/MassageShops\n<<Path>>"
+ResourceMassageShops ..> ResourceMassageShop: "/{MassageShopId}\n<<Path>>"
+ResourceMassageShop ..> RepresentationMassageShop: "<<use>>"
+
+@enduml

@@ -1,7 +1,7 @@
 const MassageShop = require('../models/MassageShop');
 
 //@desc     Get vaccine centers
-//@route    GET /api/v1/massageShops/vacCenters/
+//@route    GET /api/v1/massageShops/messageCenters/
 //@access   Public
 
 exports.getMassageShops = async (req,res,next) => {

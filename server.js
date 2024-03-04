@@ -75,5 +75,3 @@ process.on('unhandledRejection', (err, promise) => {
     console.log(`Error ${err.massage}`);
     server.close(() => process.exit(1));
 })
-
-
