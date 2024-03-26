@@ -1,0 +1,1232 @@
+{
+	"info": {
+		"_postman_id": "037b8046-cd9c-4a1d-88b1-b15984e5e792",
+		"name": "MessageShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33057548",
+		"_collection_link": "https://lunar-firefly-301289.postman.co/workspace/Project-Backend~c6e801d5-3315-4af8-b2dc-38ab8cb2670a/collection/33057548-037b8046-cd9c-4a1d-88b1-b15984e5e792?action=share&source=collection_link&creator=33057548"
+	},
+	"item": [
+		{
+			"name": "Message Shops",
+			"item": [
+				{
+					"name": "Get All Massage Shops",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); \r",
+									"\r",
+									"    pm.test('Test if it coule run propery if user login', () => {\r",
+									"        if(token !== null || token !== undefined) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Cannot access if not login', () => {\r",
+									"         if(token === null || token === undefined) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"postman.setNextRequest('Create Massage Shop');\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massageShops",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageShops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Assuming the token is stored in a variable named 'token'\r",
+									"let token = pm.environment.get('TOKEN'); // Adjust this based on how you store your token\r",
+									"let role = pm.environment.get('ROLE');\r",
+									"console.log(token)\r",
+									"\r",
+									"    pm.test('Status code is 201 is login and admin', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if((token !== null || token !== undefined) && role === 'admin') pm.response.to.have.status(201);\r",
+									"});\r",
+									"    pm.test('Status code is 401 when token is not login', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if(token === null || token === undefined) pm.response.to.have.status(401)\r",
+									"});\r",
+									" pm.test('Status code is 401 when login but user', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if((token !== null || token !== undefined) && role === 'user') pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Not include virus\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.include(\" <script> This is virus!!! </script>\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Assuming the request data is stored in a variable named 'requestData'\r",
+									"let requestData = pm.environment.get('requestData'); // Adjust this based on how you store your request data\r",
+									"\r",
+									"// Assuming the response data is stored in a variable named 'responseData'\r",
+									"let responseData = pm.response.json().nowCreate; // Adjust this based on the actual structure of your response\r",
+									"\r",
+									"\r",
+									"// Extract data from the response\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Log the entire response to the console\r",
+									"console.log(response);\r",
+									"\r",
+									"// Check if 'data' property exists in the response\r",
+									"if (response.nowCreate) {\r",
+									"    // Attempt to access the 'id' property\r",
+									"    const new_massageShop_id = response.nowCreate._id;\r",
+									"\r",
+									"    // Check if 'id' property exists in the 'data' object\r",
+									"    if (new_massageShop_id !== undefined) {\r",
+									"        // Set the extracted data as a global variable\r",
+									"        pm.globals.set('global_massageShop_id', new_massageShop_id);\r",
+									"\r",
+									"        // Set the next request\r",
+									"        postman.setNextRequest('Get Single Massage Shop');\r",
+									"    } else {\r",
+									"        console.error(\"'id' property not found in 'data' object.\");\r",
+									"    }\r",
+									"} \r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"{{$randomFullName}}  <script> This is virus!!! </script>\",\r\n    \"address\" : \"{{$randomCity}}\",\r\n    \"tel\" : \"{{$randomPhoneNumber}}\",\r\n    \"opentime\" : \"05.00 AM\",\r\n    \"closetime\" : \"13.00 PM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massageShops/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageShops",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); // Adjust this based on how you store your token\r",
+									"console.log(token)\r",
+									"\r",
+									"pm.test('Test if user login', () => {\r",
+									"    if(token !== null || token !== undefined) pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Test if user is not login', () => {\r",
+									"    if(token === null || token === undefined) pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"postman.setNextRequest(\"Update Massage Shop\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massageShops/65e4360878c2b605f62d94a7",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageShops",
+								"65e4360878c2b605f62d94a7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); \r",
+									"let role = pm.environment.get('ROLE');\r",
+									"\r",
+									"\r",
+									"// Perform your verification based on the 'admin' field\r",
+									" \r",
+									"    pm.test('Status code is 200', () => {\r",
+									"        if (role === 'admin' && (token !== null || token !== undefined)) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not an admin', () => {\r",
+									"        if (role === 'user' && (token !== null || token !== undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not login', () => {\r",
+									"        if ((token === null || token === undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Not include virus\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.include(\" <script> This is virus!!! </script>\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"postman.setNextRequest(\"Delete Massage Shop\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"{{$randomFullName}} <script> This is virus!!! </script>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massageshops/:massageID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageshops",
+								":massageID"
+							],
+							"variable": [
+								{
+									"key": "massageID",
+									"value": "{{global_massageShop_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"   let token = pm.environment.get('TOKEN'); \r",
+									"let role = pm.environment.get('ROLE'); \r",
+									"    \r",
+									"    pm.test('Status code is 200', () => {\r",
+									"        if (role === 'admin' && (token !== null || token !== undefined)) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not an admin', () => {\r",
+									"        if (role === 'user' && (token !== null || token !== undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not login', () => {\r",
+									"        if ((token === null || token === undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massageshops/:massageID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageshops",
+								":massageID"
+							],
+							"variable": [
+								{
+									"key": "massageID",
+									"value": "{{global_massageShop_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)\r",
+									"\r",
+									"pm.test('Status code is 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let requestData = pm.environment.get('requestData');\r",
+									"\r",
+									"let responseData = pm.response.json().token; // Adjust this based on the actual structure of your response\r",
+									"\r",
+									"pm.test('Verify that the token is for the role', () => {\r",
+									"    // Check if the response data matches the request data\r",
+									"    pm.expect(responseData.role).to.eql(requestData);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Not include virus\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.include(\" <script> This is virus!!! </script>\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"{{$randomFullName}} <script> This is virus!!! </script>\",\r\n    \"tel\" : \"{{$randomPhoneNumber}}\",\r\n    \"email\" : \"{{$randomEmail}}\",\r\n    \"password\" : \"12345678\",\r\n    \"role\" : \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)\r",
+									"pm.environment.set(\"ROLE\", pm.response.json().role)\r",
+									"\r",
+									"pm.test('Status code is 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin1@gmail.com\",\r\n    \"password\" : \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Logged In User with Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZGIyYjRiNWMyYjAwZDdiZTc1Njc3YyIsImlhdCI6MTcwODg2MzgyNiwiZXhwIjoxNzExNDU1ODI2fQ.qZvAgg47gAPkaGzgZwl8sdbQgbWoF9-uCdXYbkT4AVY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", null)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/all",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservations",
+			"item": [
+				{
+					"name": "Get All Res",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); \r",
+									"\r",
+									"    pm.test('Test if it coule run propery if user login', () => {\r",
+									"        if(token !== null || token !== undefined) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Cannot access if not login', () => {\r",
+									"         if(token === null || token === undefined) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"postman.setNextRequest('Login');\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add ONE Res",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Assuming the token is stored in a variable named 'token'\r",
+									"let token = pm.environment.get('TOKEN'); // Adjust this based on how you store your token\r",
+									"let role = pm.environment.get('ROLE');\r",
+									"console.log(token)\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test('Status code is 200 is login and admin and day is avaliable', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if((token !== null || token !== undefined) && role === 'admin') pm.response.to.have.status(200);\r",
+									"});\r",
+									"    pm.test('Status code is 401 when token is not login ', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if(token === null || token === undefined) pm.response.to.have.status(401)\r",
+									"});\r",
+									" pm.test('Status code is 200 when login and user and and day is avaliable', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if((token !== null || token !== undefined) && role === 'user') pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"    pm.test('Status code is 400 when day is not avaliable', () => {    // Check if the status code is 201 when the token is admin\r",
+									"        if(token === null || token === undefined) pm.response.to.have.status(401)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Not include virus\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.include(\" <script> This is virus!!! </script>\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Assuming the request data is stored in a variable named 'requestData'\r",
+									"let requestData = pm.environment.get('requestData'); // Adjust this based on how you store your request data\r",
+									"\r",
+									"// Assuming the response data is stored in a variable named 'responseData'\r",
+									"let responseData = pm.response.json().nowCreate; // Adjust this based on the actual structure of your response\r",
+									"\r",
+									"\r",
+									"// Extract data from the response\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Log the entire response to the console\r",
+									"console.log(response);\r",
+									"\r",
+									"// Check if 'data' property exists in the response\r",
+									"if (response.data) {\r",
+									"    // Attempt to access the 'id' property\r",
+									"    const new_reservation_id = response.data._id;\r",
+									"\r",
+									"    // Check if 'id' property exists in the 'data' object\r",
+									"    if (new_reservation_id !== undefined) {\r",
+									"        // Set the extracted data as a global variable\r",
+									"        pm.globals.set('global_Reservation_id', new_reservation_id);\r",
+									"\r",
+									"        // Set the next request\r",
+									"        postman.setNextRequest('Get Res for Massage Shop');\r",
+									"    } else {\r",
+									"        console.error(\"'id' property not found in 'data' object.\");\r",
+									"    }\r",
+									"} \r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"resDate\" : \"2024-03-04T07:36:52.000Z\",\r\n    \"user\" : \"65e43a9889057309aafa508f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massageshops/65e4360878c2b605f62d94a8/reservations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageshops",
+								"65e4360878c2b605f62d94a8",
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Res for Massage Shop",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massageShops/65e4360878c2b605f62d94a7/:ReservationID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageShops",
+								"65e4360878c2b605f62d94a7",
+								":ReservationID"
+							],
+							"variable": [
+								{
+									"key": "ReservationID",
+									"value": "{{global_Reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Res",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); \r",
+									"\r",
+									"    pm.test('Test if it coule run propery if user login', () => {\r",
+									"        if(token !== null || token !== undefined) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Cannot access if not login', () => {\r",
+									"         if(token === null || token === undefined) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:ReservationID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":ReservationID"
+							],
+							"variable": [
+								{
+									"key": "ReservationID",
+									"value": "{{global_Reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ONE Res",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.environment.get('TOKEN'); \r",
+									"let role = pm.environment.get('ROLE');\r",
+									"\r",
+									"\r",
+									"pm.test('Status code is 200', () => {\r",
+									"        if (role === 'admin' && (token !== null || token !== undefined)) pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not an admin', () => {\r",
+									"        if (role === 'user' && (token !== null || token !== undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"    pm.test('Status code is 401 if not login', () => {\r",
+									"        if ((token === null || token === undefined)) pm.response.to.have.status(401);\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Not include virus\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.include(\" <script> This is virus!!! </script>\");\r",
+									"});\r",
+									"\r",
+									"// Perform your verification based on the 'admin' field\r",
+									" \r",
+									"    \r",
+									"\r",
+									"\r",
+									"postman.setNextRequest(\"Delete Massage Shop\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"apptDate\": \"2050-10-25T09:01:44.387Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:ReservationID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":ReservationID"
+							],
+							"variable": [
+								{
+									"key": "ReservationID",
+									"value": "{{global_Reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ONE Res",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:ID_reservation",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":ID_reservation"
+							],
+							"variable": [
+								{
+									"key": "ID_reservation",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctor",
+			"item": [
+				{
+					"name": "Get All Doctors",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Add doctor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"{{$randomFullName}}\",\r\n    \"tel\" : \"{{$randomPhoneNumber}}\",\r\n    \"reservation\" : \"not null\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massageShops/65e4360878c2b605f62d94a7/doctor",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massageShops",
+								"65e4360878c2b605f62d94a7",
+								"doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"New Name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/doctor/65e5c1da79f92ae4ab9b46fa",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"doctor",
+								"65e5c1da79f92ae4ab9b46fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Doctor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/doctor/65e5c1da79f92ae4ab9b46fa",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"doctor",
+								"65e5c1da79f92ae4ab9b46fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/doctor/65e5c1da79f92ae4ab9b46fa",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"doctor",
+								"65e5c1da79f92ae4ab9b46fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctorr from shop",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -70,14 +70,16 @@ exports.login = async (req, res, next) => {
     //The + symbol is used as a modifier to explicitly include the field that is typically excluded.
     const user = await User.findOne({email}).select('+password');
 
+    console.log(user);
+
     if(!user){
-        return res.status(400).json({success : false, msg:'Invalid credentials'});
+        return res.status(400).json({success : false, msg:'No user'});
     }
 
     const isMatch = await user.matchPassword(password);
 
     if(!isMatch){
-        return res.status(401).json({success : false, msg:'Invalid credentials'});
+        return res.status(401).json({success : false, msg:'Invalid credentials Match'});
     }
 
     // const token = user.getSignedJwtToken();
