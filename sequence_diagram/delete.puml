@@ -1,11 +1,18 @@
 @startuml Delete Reservations (DELETE)
+@startuml Delete Reservations (DELETE)
 
+header Sample MassageShopReservation Sequence Diagram
 header Sample MassageShopReservation Sequence Diagram
 footer Page %page% of %lastpage%
 title "Cancel Reservation (DELETE)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:reservations" as routerReservation
+participant "<<controllers>>\n:reservations" as controllersReservation
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as ReservationDatabase
+
 participant "<<router>>\n:reservations" as routerReservation
 participant "<<controllers>>\n:reservations" as controllersReservation
 participant "<<model>>\n:Reservation" as modelReservation
