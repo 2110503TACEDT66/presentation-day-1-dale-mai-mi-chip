@@ -175,7 +175,7 @@ exports.updateReservation = async (req, res, next) => {
                 message: `User ${req.user.id} is not authorized to update this reservation`,
             });
         }
-        reservation = await Reservation.findByIdAndUpdate(req.body.id, req.body, {
+        reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true,
         });
